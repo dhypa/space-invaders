@@ -29,8 +29,7 @@ void Player::moveRight()
     }
 }
 
-void Player::moveLeft()
-{
+void Player::moveLeft() {
     position.x -= speed;
     if (position.x <= 0)
     {
@@ -42,7 +41,7 @@ void Player::shootLaser()
 {
     if ((GetTime() - timeSinceLastLaser) > 0.4)
     {
-        lasers.push_back(Laser({position.x + (shipSprite.width / 2), position.y - 4}, 6));
+        lasers.push_back(Laser({ position.x + (shipSprite.width / 2), position.y - 4 }, 6));
         timeSinceLastLaser = GetTime();
     }
 };

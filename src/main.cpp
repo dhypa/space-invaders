@@ -4,36 +4,27 @@
 #include "gamecontainer.hpp"
 #include "laser.hpp"
 
-int main()
-{
+int main() {
     const int screenWidth = 700;
     const int screenHeight = 600;
 
-    Color bgColour = {0, 0, 0, 255}; // black
 
     InitWindow(screenWidth, screenHeight, "Space Invaders");
-    SetTargetFPS(20);
+    SetTargetFPS(60);
+
     GameContainer game;
-    Invader invader(1, 2);
-    Vector2 pos = {300, 200};
 
-    Laser *laser = new Laser(pos, 4);
 
-    do
-    {
-        (*laser).update();
+
+    while (true) {
         game.update();
         game.handleInput();
-
         BeginDrawing();
-
-        ClearBackground(bgColour);
+        ClearBackground(BLACK);
         game.draw();
-        invader.draw();
-        (*laser).draw();
-
         EndDrawing();
 
-    } while (!0);
+
+    }
     CloseWindow();
 }

@@ -19,5 +19,5 @@ private:
     Vector2 position;
     Texture2D shipSprite;
     int speed;
-    double timeSinceLastLaser;
+    double timeSinceLastLaser; // Used to regulate firerate of player weapon
 };

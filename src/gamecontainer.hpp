@@ -1,6 +1,8 @@
 #pragma once
 #include <raylib.h>
 #include "player.hpp"
+#include "obstable.hpp"
+#include "invader.hpp"
 
 class GameContainer
 {
@@ -14,4 +16,8 @@ public:
 
 private:
     Player player;
+    std::vector<Obstacle> createObstacles();
+    std::vector<Obstacle> obstacles;
+    std::vector<Invader> invaders;
+    std::vector<Invader> createInvaders();
 };
