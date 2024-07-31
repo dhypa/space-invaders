@@ -32,3 +32,13 @@ void Invader::draw() {
 int Invader::getType() {
     return type;
 }
+
+void Invader::unloadImages() {
+    for (int i = 0; i < 3; i++) {
+        UnloadTexture(invaderImages[i]);
+    }
+}
+
+void Invader::update(int direction) {
+    position.x += direction;
+}

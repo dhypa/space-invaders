@@ -6,10 +6,11 @@ public:
     Invader(int type, Vector2 position);
     void update();
     void draw();
+    void update(int direction);
     int getType();
     void moveRight();
     void moveLeft();
-    void shootLaser();
+    static void unloadImages();
     Vector2 position;
     static Texture2D invaderImages[3];
     int type;

@@ -1,13 +1,17 @@
 #include <raylib.h>
-#include "player.hpp"
 #include "gamecontainer.hpp"
 #include <iostream>
+#include <cstdlib> 
+#include <ctime> 
 
 GameContainer::GameContainer() {
     obstacles = createObstacles();
     invaders = createInvaders();
+    invaderDirection = 1;
+    timeSinceLastInvaderFired = 0;
 }
 GameContainer::~GameContainer() {
+    Invader::unloadImages();
 }
 void GameContainer::draw() {
     player.draw();
@@ -22,6 +26,10 @@ void GameContainer::draw() {
     }
     for (Invader& invader : invaders) {
         invader.draw();
+    }
+    for (Laser& laser : invaderLasers)
+    {
+        laser.draw();
     }
 
 }
@@ -42,25 +50,33 @@ void GameContainer::handleInput() {
 }
 
 void GameContainer::deleteInactiveLasers() {
-    for (auto it = player.lasers.begin(); it != player.lasers.end();)
-    {
-        if (!it->alive)
-        {
+    for (auto it = player.lasers.begin(); it != player.lasers.end();) {
+        if (!it->alive) {
             it = player.lasers.erase(it);
         }
-        else
-        {
+        else {
+            ++it;
+        }
+    }
+    for (auto it = invaderLasers.begin(); it != invaderLasers.end();) {
+        if (!it->alive) {
+            it = invaderLasers.erase(it);
+        }
+        else {
             ++it;
         }
     };
 }
 
 void GameContainer::update() {
-    for (Laser& laser : player.lasers)
-    {
-
+    for (Laser& laser : player.lasers) {
         laser.update();
     };
+    for (Laser& laser : invaderLasers) {
+        laser.update();
+    }
+    fireInvaderLaser();
+    moveInvaders();
     deleteInactiveLasers();
 }
 
@@ -84,10 +100,10 @@ std::vector<Invader> GameContainer::createInvaders() {
             float y = 50 + row * 46;
             float x = 86 + col * 50;
             int invaderType;
-            if (row < 3) {
+            if (row == 1 || row == 0) {
                 invaderType = 1;
             }
-            else if (row < 5) {
+            else if (row == 2 || row == 3) {
                 invaderType = 2;
             }
             else {
@@ -98,4 +114,36 @@ std::vector<Invader> GameContainer::createInvaders() {
 
     }
     return invaders;
+}
+
+void GameContainer::moveInvaders() {
+    for (auto& invader : invaders) {
+        if (invader.position.x + 40 > GetScreenWidth()) {
+            invaderDirection = -1;
+            moveDownInvaders(4);
+        }
+        else if (invader.position.x < 0) {
+            invaderDirection = 1;
+            moveDownInvaders(4);
+        }
+
+        invader.update(invaderDirection);
+    }
+
+}
+
+void GameContainer::moveDownInvaders(int displacement) {
+    for (auto& invader : invaders) {
+        invader.position.y += displacement;
+    }
+}
+
+void GameContainer::fireInvaderLaser() {
+    double time = GetTime();
+
+    if (time - timeSinceLastInvaderFired > invaderFireLaserInterval && !invaders.empty()) {
+        int i = GetRandomValue(0, invaders.size() - 1);
+        invaderLasers.push_back(Laser({ invaders[i].position.x + 20,invaders[i].position.y + 20 }, -6));
+        timeSinceLastInvaderFired = time;
+    }
 }

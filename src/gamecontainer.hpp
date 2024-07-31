@@ -12,7 +12,7 @@ public:
     void draw();
     void update();
     void handleInput();
-    void deleteInactiveLasers();
+
 
 private:
     Player player;
@@ -20,4 +20,12 @@ private:
     std::vector<Obstacle> obstacles;
     std::vector<Invader> invaders;
     std::vector<Invader> createInvaders();
+    void deleteInactiveLasers();
+    void moveInvaders();
+    void moveDownInvaders(int displacement);
+    int invaderDirection;
+    std::vector<Laser> invaderLasers;
+    void fireInvaderLaser();
+    constexpr static float invaderFireLaserInterval = 0.15;
+    float timeSinceLastInvaderFired;
 };
